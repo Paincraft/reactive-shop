@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ProductTable from './components/product-table/productTable.jsx';
+import ProductList from './components/productList.jsx';
 
 var data = [
   {name: 'test1', description: '...'},
@@ -8,5 +8,5 @@ var data = [
 ]
 
 export default function renderView(){
-  ReactDOM.render(<ProductTable data={data}/>, document.getElementById('container'));
+  ReactDOM.render(<ProductList products={data}/>, document.getElementById('container'));
 }
