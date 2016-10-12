@@ -4,19 +4,21 @@ import GenericRow from './genericRow.jsx';
 
 export default class GenericList extends React.Component{
   render(){
-    let rowClassList = this.props.rowClassList.reduce((curr,prev) => {
-      return `${curr} ${prev}`;
-    });
+    function parseClasses(classList){
+      return classList.reduce((curr,prev) => {
+        return `${curr} ${prev}`;
+      });
+    }
 
-    this.classList = this.props.classList.reduce((curr,prev) => {
-      return `${curr} ${prev}`;
-    });
+    let rowClassList = parseClasses(this.props.rowClassList);
 
-    this.rows = this.props.rows.map(function(content){
+    this.classList = parseClasses(this.props.classList);
+    this.rows = this.props.rows.map(function(content,idx){
       return (
-        <GenericRow content={content} classList={rowClassList} />
+        <GenericRow key={idx} content={content} classList={rowClassList} />
       )
     })
+
     this.render = template.bind(this);
     return this.render();
   }

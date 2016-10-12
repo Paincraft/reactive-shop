@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import ProductList from './components/productList.jsx';
 
 var data = [
-  {name: 'test1', description: '...'},
-  {name: 'test2', description: ',,,'}
+  {key: 1, name: 'test1', description: '...'},
+  {key: 2, name: 'test2', description: ',,,'}
 ]
 
 export default function renderView(){

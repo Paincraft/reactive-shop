@@ -11,6 +11,7 @@ export default class ProductList extends React.Component {
     });
     let classList = ['productList'];
     let rowClassList = ['productRow'];
-    return (<GenericList rows={products} classList={classList} rowClassList={rowClassList}/>);
+
+    return (<GenericList id="productList" rows={products} classList={classList} rowClassList={rowClassList}/>);
   }
 }

@@ -6,7 +6,7 @@ export default function(){
   return (
     <ShadowDOM>
       <div>
-        <div className={this.props.classList}>
+        <div className={this.props.classList} id={this.props.id}>
           {this.rows}
         </div>
       </div>
