@@ -9,7 +9,12 @@
   "author": "Paincraft",
   "license": "ISC",
   "dependencies": {
+    "classnames": "^2.2.5",
+    "jquery": "^3.1.1",
+    "lodash": "^4.16.4",
     "react": "^15.3.2",
+    "react-addons": "^0.9.1-deprecated",
+    "react-bootstrap": "^0.30.5",
     "react-dom": "^15.3.2",
     "react-shadow": "^1.1.0"
   },

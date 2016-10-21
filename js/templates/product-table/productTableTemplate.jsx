@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import ShadowDOM from 'react-shadow';
 
@@ -6,7 +5,7 @@ export default function(){
   return (
     <ShadowDOM>
       <div>
-        <div className={this.props.classList} id={this.props.id}>
+        <div className="productTable">
           {this.rows}
         </div>
       </div>
