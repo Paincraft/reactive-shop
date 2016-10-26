@@ -19,11 +19,11 @@ let data = [
 
 let categories = {
   categoryLevel1: {
-    'subCategoryLevel1_1':null,
-    'subCategoryLevel1_2':null
+    subCategoryLevel1_1:'subCategoryLevel1_1',
+    subCategoryLevel1_2:'subCategoryLevel1_2'
   },
-  categoryLevel1_1: {subCategoryLevel1_1: {subCategoryLevel2: null}},
-  categoryLevel1_2: null
+  categoryLevel1_1: {subCategoryLevel1_1: {subCategoryLevel2: 'subCategoryLevel2'}},
+  categoryLevel1_2: 'categoryLevel1_2'
 }
 
 let menuItems = ['home','porn','about'];
@@ -56,5 +56,6 @@ export default function renderView() {
     , document.getElementById('container')
   );
 
-  console.log((<a></a>) instanceof React.Component)
+  const reactElementSymbol = (<a></a>).$$typeof;
+  console.log((<ul></ul>).$$typeof === reactElementSymbol)//typeof (<a></a>)['$$typeof'])
 }

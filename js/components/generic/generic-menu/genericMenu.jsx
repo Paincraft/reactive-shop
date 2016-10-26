@@ -29,12 +29,6 @@ export default class GenericMenu extends React.Component {
     };
   }
 
-  onClickCallback(rootCtx) {
-    return  (event, childEventKey) => {
-      rootCtx.setState({currentActiveChild: childEventKey});
-    }
-  }
-
   handleOnKeyUp(event) {
     if (this.props.onKeyUp && typeof this.props.onKeyUp === 'function')
       this.props.onKeyUp.call(this, event)
