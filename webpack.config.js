@@ -2,8 +2,13 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: './reactive-shop.js',
-  output: { path: __dirname, filename: 'bundle.js' },
+  entry: [
+    'babel-polyfill', './reactive-shop.js'
+  ],
+  output: {
+    path: __dirname,
+    filename: 'bundle.js'
+  },
   module: {
     loaders: [
       {
@@ -15,5 +20,5 @@ module.exports = {
         }
       }
     ]
-  },
+  }
 };

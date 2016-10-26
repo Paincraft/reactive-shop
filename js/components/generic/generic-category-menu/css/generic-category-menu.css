@@ -1,0 +1,21 @@
+li.collapsed > ul{
+  display: none;
+}
+
+ul{
+  list-style: none;
+}
+
+li.active{
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+li:not(.active){
+  font-weight: normal;
+  color: black;
+}
+
+li{
+  cursor: default;
+}

@@ -11,7 +11,8 @@ export default class ProductList extends React.Component {
     this.state = {
       classList: ['productList'],
       rowClassList: ['productRow'],
-      headerClassList: ['listHeader']
+      headerClassList: ['listHeader'],
+      rowWrapperClassList: ['rowWrapper']
     };
   }
 
@@ -34,10 +35,13 @@ export default class ProductList extends React.Component {
       headerClassList: this.state.headerClassList,
       headerOnClickCallback: function() {},
       rows: products,
+      rowWrapperClassList: this.state.rowWrapperClassList,
       rowClassList: this.state.rowClassList,
       rowOnClickCallback: function() {},
       classList: this.state.classList,
-      cssPath: 'js/components/generic/generic-list/css/generic-list.css'
+      cssPath: 'js/components/generic/generic-list/css/generic-list.css',
+      collapsed: false,
+      collapsible: true
     }
 
     let headerTitle = 'header title';

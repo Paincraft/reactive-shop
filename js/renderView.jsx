@@ -1,12 +1,60 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ProductList from './components/productList.jsx';
+import Category from './components/generic/generic-category-menu/genericCategoryMenu.jsx';
+import Menu from './components/generic/generic-menu/genericMenu.jsx';
+import Helpers from './helpers/helpers.jsx';
 
-var data = [
-  {key: 1, name: 'test1', description: '...'},
-  {key: 2, name: 'test2', description: ',,,'}
+let data = [
+  {
+    key: 1,
+    name: 'test1',
+    description: '...'
+  }, {
+    key: 2,
+    name: 'test2',
+    description: ',,,'
+  }
 ]
 
-export default function renderView(){
-  ReactDOM.render(<ProductList products={data}/>, document.getElementById('container'));
+let categories = {
+  categoryLevel1: {
+    'subCategoryLevel1_1':null,
+    'subCategoryLevel1_2':null
+  },
+  categoryLevel1_1: {subCategoryLevel1_1: {subCategoryLevel2: null}},
+  categoryLevel1_2: null
+}
+
+let menuItems = ['home','porn','about'];
+//here we implement logic
+function initGenerator() {
+  return Helpers.createKeyGenerator(0,(key) => {
+    return ++key;
+  });
+}
+
+export default function renderView() {
+  /*ReactDOM.render(
+  <ProductList products={data} collapsible={true}/>
+    <Menu classList={['menu']} menuItems={menuItems} keyIterator={initGenerator()} cssPath={'js/components/generic/generic-menu/css/generic-menu.css'}
+    listElementClassList={['list-element']} wrapperClassList={''} />
+
+    <Category categories={categories} keyIterator={initGenerator()} classList={['']}
+    listElementClassList={['list-element']} cssPath={'js/components/generic/generic-category-menu/css/generic-category-menu.css'} enableShadowRoot={true}/>
+
+    */
+  ReactDOM.render(
+    <Menu classList={['menu']} menuItems={menuItems} keyIterator={initGenerator()} cssPath={'js/components/generic/generic-menu/css/generic-menu.css'}
+    listElementClassList={['list-element']} wrapperClassList={''} collapsible={false} position={Symbol.for('top')}/>
+    , document.getElementById('menu')
+  );
+
+  ReactDOM.render(
+    <Category categories={categories} keyIterator={initGenerator()} classList={['']}
+    listElementClassList={['list-element']} cssPath={'js/components/generic/generic-category-menu/css/generic-category-menu.css'} enableShadowRoot={true} collapsible={true}/>
+    , document.getElementById('container')
+  );
+
+  console.log((<a></a>) instanceof React.Component)
 }

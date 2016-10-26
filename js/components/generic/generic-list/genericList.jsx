@@ -1,36 +1,29 @@
 import React from 'react';
 import _ from 'lodash';
 import template from './templates/genericListTemplate.jsx';
+import classNames from 'classnames';
 
 export default class GenericList extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      rowClassList: []
+      collapsed: this.props.opts.collapsible ? this.props.opts.collapsed : false
     };
   }
 
+  //callback passesd and bound to child, rootCtx is this (GenericList)
   headerOnClickCallbackWrapper(rootCtx) {
     return () => {
-      rootCtx.hideRows();
+      if(this.props.opts.collapsible)
+        rootCtx.hideRows();
       if (this.props.opts.headerOnClickCallback && typeof this.props.opts.headerOnClickCallback === 'function') {
-        this.props.opts.headerOnClickCallback.call(this);
+        this.props.opts.headerOnClickCallback.call(this, event);
       }
     }
   }
 
   hideRows() {
-    let newArr = this.state.rowClassList;
-    if (!this.state.rowClassList.includes("hidden")) {
-      newArr.push('hidden');
-    } else {
-      _.pull(newArr, 'hidden');
-    }
-    this.setState({rowClassList: newArr});
-  }
-
-  componentWillMount() {
-    this.setState({rowClassList: this.props.opts.rowClassList})
+    this.setState({collapsed: !this.state.collapsed});
   }
 
   render() {

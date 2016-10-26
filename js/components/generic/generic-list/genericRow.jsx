@@ -1,29 +1,44 @@
 import React from 'react';
-import templateFunction from './templates/genericRowTemplate.jsx';
+import template from './templates/genericRowTemplate.jsx';
 import classNames from 'classnames';
 
 export default class GenericRow extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.setCssClasses = function(state){
+      return classNames(this.props.classList, {active: state.active}, {hidden: state.hidden});
+    }
     this.state = {
       active: false,
-      hidden: false
+      hidden: this.props.hidden,
     };
+
   }
 
-  handleClick() {
-    this.setState({
+  handleClick(event) {
+    let newState = {
       active: !this.state.active
-    });
+    }
+    newState.cssClasses = setCssClasses(newState);
+    this.setState(newState);
     if (this.props.onClick && typeof this.props.onClick === 'function')
-      this.props.onClick.call(this)
+      this.props.onClick.call(this, event)
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.hidden !== this.state.hidden){
+      let newState = {hidden: nextProps.hidden};
+      newState.cssClasses = this.setCssClasses(newState);
+      this.setState(newState);
+    }
+  }
+
+  componentWillMount(){
+    this.setState({cssClasses: this.setCssClasses(this.state)});
   }
 
   render() {
-    this.cssClasses = classNames(this.props.classList, {
-      active: this.state.active
-    }, {hidden: this.state.hidden});
-    let template = templateFunction.bind(this);
-    return template();
+    this.render = template.bind(this);
+    return this.render();
   }
 }
