@@ -1,8 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
-import template from './templates/genericCategoryMenuTemplate.jsx';
-import CategoryItem from './genericCategoryItem.jsx';
+import CategoryItem from '../base/EnchancedLi.jsx';
 import classNames from 'classnames';
+import ShadowDOM from 'react-shadow';
 
 const reactElementSymbol = (<a></a>).$$typeof;
 
@@ -63,11 +63,20 @@ export default class GenericCategoryMenu extends React.Component {
 
   componentWillReceiveProps(nextProps){
     if(nextProps.cssClasses)
-      this.setState({cssClasses: nextProps.cssClasses});
+      this.setState({cssClasses: nextProps.classList});
   }
 
   render() {
-    this.render = template.bind(this);
-    return this.render();
+    let result = this.parseCategories(this.props.categories, 0);
+    if(this.props.wrapped){
+      result = (
+          <div className={this.state.cssClasses} id={this.props.id}>
+            {result}
+          </div>
+    )}
+    if(this.props.enableShadowRoot){
+      result = (<ShadowDOM include={[this.props.cssPath]}><div>{result}</div></ShadowDOM>)
+    }
+    return result;
   }
 }

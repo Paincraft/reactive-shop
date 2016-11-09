@@ -1,9 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
-import template from './templates/genericCategoryItemTemplate.jsx';
 import classNames from 'classnames';
 
-export default class GenericCategoryItem extends React.Component {
+export default class EnchancedLi extends React.Component {
   constructor(props) {
     super(props);
     this.setCssClasses = function(state){
@@ -21,7 +20,6 @@ export default class GenericCategoryItem extends React.Component {
   handleClick(event) {
     event.preventDefault();
     event.stopPropagation();
-    console.log(event.target)
     let eventkey = event.target.attributes.getNamedItem('data-eventkey');
     if(eventkey &&  eventkey.value === this.props.eventkey){
       let newState = {
@@ -35,7 +33,7 @@ export default class GenericCategoryItem extends React.Component {
       this.props.onClick.call(this, event, this.props.eventkey, this.props.parentsList);
   }
 
-  handleOnMouseOver(event){
+  handleOnMouse(event){
     event.preventDefault();
     if(this.props.hoverable){
       let newState;
@@ -43,22 +41,7 @@ export default class GenericCategoryItem extends React.Component {
       //console.log('hover', event.target, event.target.attributes.getNamedItem('data-eventkey'), thisEventkey);
       if(eventkey &&  eventkey.value === this.props.eventkey){
         newState = Object.create(this.state);
-        newState.hover = true;
-        newState.cssClasses = this.setCssClasses(newState);
-        this.setState(newState);
-      }
-    }
-  }
-
-  handleOnMouseOut(event){
-    event.preventDefault();
-    if(this.props.hoverable){
-      let newState;
-      let eventkey = event.target.attributes.getNamedItem('data-eventkey');
-      //console.log('hover', event.target, event.target.attributes.getNamedItem('data-eventkey'), thisEventkey);
-      if(eventkey &&  eventkey.value === this.props.eventkey){
-        newState = Object.create(this.state);
-        newState.hover = false;
+        newState.hover = (event.type === 'mouseover') ? true : false;
         newState.cssClasses = this.setCssClasses(newState);
         this.setState(newState);
       }
@@ -90,45 +73,8 @@ export default class GenericCategoryItem extends React.Component {
   }
 
   render() {
-    this.render = template.bind(this);
-    return this.render();
+    return (
+      <li onMouseOver={this.handleOnMouse.bind(this)} onMouseOut={this.handleOnMouse.bind(this)} onClick={this.handleClick.bind(this)} className={this.state.cssClasses} data-eventkey={this.props.eventkey}>{this.props.category} {this.props.submenu}</li>
+    )
   }
 }
-
-
-/*function handleHover(event, hovered, thisEventkey){
-  event.preventDefault();
-  let newState;
-  let eventkey = event.target.attributes.getNamedItem('data-eventkey');
-  console.log('hover', event.target, event.target.attributes.getNamedItem('data-eventkey'), thisEventkey);
-  if(eventkey &&  eventkey.value === thisEventkey){
-    console.log('hover1', newState);
-    newState = {
-      hover: hovered
-    }
-    console.log('hover2', newState);
-  }
-  console.log('hover3', newState);
-  return newState;
-}*/
-
-/*handleOnMouseOver(event){
-  if(this.props.hoverable){
-    let newState = handleHover(event, true, this.props.eventkey);
-    if(newState){
-      newState.cssClasses = this.setCssClasses(newState);
-      console.log('hover4', newState);
-      this.setState(newState);
-    }
-  }
-}
-
-handleOnMouseOut(event){
-  if(this.props.hoverable){
-    let newState = handleHover(event, false, this.props.eventkey);
-    if(newState){
-      newState.cssClasses = this.setCssClasses(newState);
-      this.setState(newState);
-    }
-  }
-}*/

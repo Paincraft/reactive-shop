@@ -1,0 +1,53 @@
+.tags-input {
+  display: inline-block;
+  padding: 0 2px;
+  background: #FFF;
+  border: 1px solid #CCC;
+  width: 16em;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+.tags-input .tag {
+  display: inline-block;
+  background: #EEE;
+  color: #444;
+  padding: 0 4px;
+  margin: 2px;
+  border: 1px solid #CCC;
+  border-radius: 2px;
+  font: inherit;
+  user-select: none;
+  cursor: pointer;
+  transition: all 100ms ease;
+}
+.tags-input .tag.selected {
+  background-color: #777;
+  border-color: #777;
+  color: #EEE;
+}
+.tags-input .tag.duplicate {
+  transform: scale3d(1.1, 1.1, 1.1);
+  background-color: #FCC;
+  border-color: #700;
+}
+.tags-input input {
+  appearance: none;
+  display: block;
+  width: 100%;
+  padding: 3px;
+  margin: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  font: inherit;
+  font-size: 100%;
+  outline: none;
+}
+.tags-input .selected ~ input {
+  opacity: 0.3;
+}
+.tags-input .tag.active{
+  font-weight: bold;
+  background-color:red;
+}

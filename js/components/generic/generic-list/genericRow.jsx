@@ -1,5 +1,4 @@
 import React from 'react';
-import template from './templates/genericRowTemplate.jsx';
 import classNames from 'classnames';
 
 export default class GenericRow extends React.Component {
@@ -38,7 +37,10 @@ export default class GenericRow extends React.Component {
   }
 
   render() {
-    this.render = template.bind(this);
-    return this.render();
+    return (
+      <div className={this.state.cssClasses} onClick={this.handleClick.bind(this)}>
+        {this.props.content}
+      </div>
+    )
   }
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import template from './templates/genericHeaderTemplate.jsx';
 import classNames from 'classnames';
 
 export default class GenericHeader extends React.Component {
@@ -32,7 +31,13 @@ export default class GenericHeader extends React.Component {
   }
 
   render() {
-    this.render = template.bind(this);
-    return this.render();
+    return (
+      <div className={this.state.cssClasses}>
+        <p onClick={this.handleClick.bind(this)}>{this.props.title}</p>
+        <div className={this.state.cssClassesContent}>
+          {this.props.content}
+        </div>
+      </div>
+    )
   }
 }
