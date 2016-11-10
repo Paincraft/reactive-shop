@@ -75,9 +75,9 @@ export default class GenericImageCropper extends React.Component {
   };
 
   endResize(event){
-    console.log('event', event)
     event && event.preventDefault();
     if(event && (event.target === document.documentElement && event.type === 'mouseout') || event.type === 'mouseup'){
+      console.log(document.documentElement, (event.target === document.documentElement && event.type === 'mouseout'));
       document.removeEventListener('mousemove', this.resizingBinded, true);
       document.removeEventListener('mouseup', this.endResizeBinded, true);
       document.documentElement.removeEventListener('mouseout', this.endResizeBinded, true);
