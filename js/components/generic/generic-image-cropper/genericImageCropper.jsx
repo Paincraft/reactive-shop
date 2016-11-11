@@ -2,13 +2,14 @@ import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
 import Helpers from '../../../helpers/helpers.jsx';
+import ShadowDOM from 'react-shadow';
 
 //based on http://tympanus.net/codrops/2014/10/30/resizing-cropping-images-canvas/
 export default class GenericImageCropper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cssClasses: classNames('resize-container', this.props.classList)
+      cssClasses: classNames('main-overlay', this.props.classList)
     };
     this.origSrc = new Image();
     this.origSrc.src = this.props.src;
@@ -25,7 +26,18 @@ export default class GenericImageCropper extends React.Component {
 
   componentWillReceiveProps(nextProps){
     if(nextProps.cssClasses)
-      this.setState({cssClasses: classNames('resize-container', this.props.classList)});
+      this.setState({cssClasses: classNames('main-overlay', this.props.classList)});
+  }
+
+  componentDidMount(){
+    //Initial resize, prevent cropping errors on unchaged img
+    this.image.style = 'visibility:hidden;';
+    setTimeout(() => {
+      window.requestAnimationFrame((() => {
+        this.resizeImage(this.image.width-1, this.image.height-1);
+        this.image.style = '';
+      }).bind(this))
+    },0);
   }
 
   handleOnMouseDownResize(event){
@@ -70,6 +82,9 @@ export default class GenericImageCropper extends React.Component {
 
   endMoving(event){
     event.preventDefault();
+    if(!this.image.src.includes('data:image')){
+      this.resizeImage(this.image.width, this.image.height);
+    }
     document.removeEventListener('mouseup', this.endMovingBinded, true);
     document.removeEventListener('mousemove', this.movingBinded, true);
   };
@@ -77,7 +92,6 @@ export default class GenericImageCropper extends React.Component {
   endResize(event){
     event && event.preventDefault();
     if(event && (event.target === document.documentElement && event.type === 'mouseout') || event.type === 'mouseup'){
-      console.log(document.documentElement, (event.target === document.documentElement && event.type === 'mouseout'));
       document.removeEventListener('mousemove', this.resizingBinded, true);
       document.removeEventListener('mouseup', this.endResizeBinded, true);
       document.documentElement.removeEventListener('mouseout', this.endResizeBinded, true);
@@ -145,23 +159,52 @@ export default class GenericImageCropper extends React.Component {
   }
 
   resizeImage(width, height){
+    //console.log('resize')
     this.resizeCanvas.width = width;
     this.resizeCanvas.height = height;
-    //console.log('resizeImage pre', this.resizeCanvas, this.origSrc)
     this.resizeCanvas.getContext('2d').drawImage(this.origSrc, 0, 0, width, height);
-    //console.log('resizeImage post', this.resizeCanvas);
     this.image.setAttribute('src', this.resizeCanvas.toDataURL("image/png"));
   };
 
+  crop(){
+    let cropCanvas;
+    let overlayOffset = Helpers.getDomElementOffset(this.overlay);
+    let wrapperOffset = Helpers.getDomElementOffset(this.wrapper);
+    let left = overlayOffset.left - wrapperOffset.left;
+    let top =  overlayOffset.top - wrapperOffset.top;
+    let width = this.overlay.offsetWidth
+    let height = this.overlay.offsetHeight;
+
+    cropCanvas = document.createElement('canvas');
+    cropCanvas.width = width;
+    cropCanvas.height = height;
+    cropCanvas.getContext('2d').drawImage(this.image, left, top, width, height, 0, 0, width, height);
+    //window.open(cropCanvas.toDataURL("image/png"));
+    if(this.props.cropCallback && typeof this.props.cropCallback === 'function')
+      this.props.cropCallback(cropCanvas.toDataURL());
+  }
+
   render() {
     return (
-      <div ref={(wrapper) => {this.wrapper = wrapper}} className={this.state.cssClasses} onMouseDown={this.handleOnMouseDownMove.bind(this)}>
-        <span className="resize-handle resize-handle-nw" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
-        <span className="resize-handle resize-handle-ne" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
-        <img className="resize-image" ref={(image) => {this.image = image}} src={this.props.src} alt={this.props.alt}/>
-        <span className="resize-handle resize-handle-se" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
-        <span className="resize-handle resize-handle-sw" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
-      </div>
+      <ShadowDOM include={[this.props.cssPath]}>
+        <div>
+          <div className={this.state.cssClasses}>
+            <div ref={(overlay) => {this.overlay = overlay}} className="overlay">
+              <div className="overlay-inner"></div>
+            </div>
+
+            <div ref={(wrapper) => {this.wrapper = wrapper}} className={'resize-container'} onMouseDown={this.handleOnMouseDownMove.bind(this)}>
+              <span className="resize-handle resize-handle-nw" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
+              <span className="resize-handle resize-handle-ne" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
+              <img className="resize-image" ref={(image) => {this.image = image}} src={this.props.src} alt={this.props.alt}/>
+              <span className="resize-handle resize-handle-se" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
+              <span className="resize-handle resize-handle-sw" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
+            </div>
+
+            <button onClick={this.crop.bind(this)} className="btn-crop js-crop">Crop</button>
+          </div>
+        </div>
+      </ShadowDOM>
     );
   }
 }

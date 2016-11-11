@@ -55,7 +55,7 @@ export default function renderView() {
     , document.getElementById('list')
   );*/
   ReactDOM.render(
-    <ImageCropper classList={[]} src={'/test/img/20160421_143103.jpg'} alt={'test'} constrain={true}/>
+    <ImageCropper classList={[]} src={'/test/img/20160421_143103.jpg'} alt={'test'} constrain={true} cssPath={'js/components/generic/generic-image-cropper/css/generic-image-cropper.css'}/>
     ,document.getElementById('img')
   );
 }
