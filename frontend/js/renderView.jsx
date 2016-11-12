@@ -1,6 +1,7 @@
 'use strict'
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Axios from 'axios';
 import ProductList from './components/productList.jsx';
 import Category from './components/generic/generic-category-menu/genericCategoryMenu.jsx';
 import Menu from './components/generic/generic-menu/genericMenu.jsx';
@@ -37,8 +38,13 @@ function initGenerator() {
   });
 }
 
+let instance = Axios.create({
+  baseURL: 'http://localhost:3000/product/',
+  timeout: 1000
+});
+
 function cropCallback(imgData){
-  let headers = new Headers();
+  /*let headers = new Headers();
   headers.set('Content-Type', 'application/json')
   let request = new Request('http://localhost:3000/produck/saveproduct',{
     headers: headers,
@@ -48,7 +54,22 @@ function cropCallback(imgData){
   });
   request.headers.append('Content-Type', 'application/json');
   console.log(request.headers.get('Content-Type'), headers.get('Content-Type'));
-  //fetch()
+  fetch('http://localhost:3000/produck/saveproduct',{
+    headers: headers,
+
+    mode: 'no-cors',
+    data: JSON.stringify({imgData: Helpers.getBase64FromUrl(imgData)}),
+  }).then().catch();*/
+  //data: JSON.stringify({imgData: Helpers.getBase64FromUrl(imgData)})
+  instance.post('/saveproduct', {imgData: Helpers.getBase64FromUrl(imgData)},{
+    headers: {'Content-Type':'application/json'}
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 }
 
 export default function renderView() {
