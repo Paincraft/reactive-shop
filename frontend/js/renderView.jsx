@@ -1,3 +1,4 @@
+'use strict'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ProductList from './components/productList.jsx';
@@ -36,6 +37,20 @@ function initGenerator() {
   });
 }
 
+function cropCallback(imgData){
+  let headers = new Headers();
+  headers.set('Content-Type', 'application/json')
+  let request = new Request('http://localhost:3000/produck/saveproduct',{
+    headers: headers,
+    method: 'POST',
+    mode: 'no-cors',
+    data: JSON.stringify({imgData: Helpers.getBase64FromUrl(imgData)}),
+  });
+  request.headers.append('Content-Type', 'application/json');
+  console.log(request.headers.get('Content-Type'), headers.get('Content-Type'));
+  //fetch()
+}
+
 export default function renderView() {
   /*ReactDOM.render(
     <Menu classList={['menu']} menuItems={menuItems} keyIterator={initGenerator()} cssPath={'js/components/generic/generic-menu/css/generic-menu.css'}
@@ -55,7 +70,7 @@ export default function renderView() {
     , document.getElementById('list')
   );*/
   ReactDOM.render(
-    <ImageCropper classList={[]} src={'/test/img/20160421_143103.jpg'} alt={'test'} constrain={true} cssPath={'js/components/generic/generic-image-cropper/css/generic-image-cropper.css'}/>
+    <ImageCropper classList={[]} src={'/img/1975-free-love.png'} alt={'test'} constrain={true} cssPath={'js/components/generic/generic-image-cropper/css/generic-image-cropper.css'} cropCallback={cropCallback}/>
     ,document.getElementById('img')
   );
 }

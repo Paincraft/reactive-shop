@@ -176,7 +176,7 @@ export default class GenericImageCropper extends React.Component {
     cropCanvas.width = width;
     cropCanvas.height = height;
     cropCanvas.getContext('2d').drawImage(this.image, left, top, width, height, 0, 0, width, height);
-    window.open(cropCanvas.toDataURL("image/png"));
+    //window.open(cropCanvas.toDataURL("image/png"));
     if(this.props.cropCallback && typeof this.props.cropCallback === 'function')
       this.props.cropCallback(cropCanvas.toDataURL());
   }

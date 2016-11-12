@@ -77,4 +77,10 @@ export default class Helpers{
     element.style.top = String(props.top) + 'px';
     element.style.left = String(props.left) + 'px'
 	}
+
+  static getBase64FromUrl(url){
+    let match = new RegExp(/^data:\S+,/g);
+    url = match[Symbol.replace](url,'');
+    return url;
+  }
 }
