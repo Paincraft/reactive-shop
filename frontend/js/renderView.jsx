@@ -9,6 +9,8 @@ import Helpers from './helpers/helpers.jsx';
 import TagsInput from './components/generic/generic-tags-input/genericTagsInput.jsx';
 import ImageCropper from './components/generic/generic-image-cropper/genericImageCropper.jsx';
 //import Description from './components/generic/generic-description-output/genericDescriptionOutput.jsx';
+//Upload
+import Upload from './components/generic/generic-file-upload/genericFileUpload.jsx';
 let data = [
   {
     key: 1,
@@ -38,31 +40,43 @@ function initGenerator() {
   });
 }
 
+function filesUploadCallback(files){
+  if(!files || files.length > 1) {error: {isError: true}};
+  let reader  = new FileReader();
+  /*Array.prototype.forEach.call(files,
+    (file) =>{ console.log(file);}
+  );*/
+  reader.onload = function(){
+    ReactDOM.render(
+      <ImageCropper classList={[]} src={reader.result} alt={'test'} constrain={true} cssPath={'js/components/generic/generic-image-cropper/css/generic-image-cropper.css'} cropCallback={cropCallback}/>
+      ,document.getElementById('img')
+    );
+  };
+
+  try{
+    reader.readAsDataURL(files[0]);
+  }catch(error){
+    console.log('filesUploadCallback', error);
+    return {error: {isError: true}};
+  }
+
+  return {error: {isError: false}};
+  /*ReactDOM.render(
+    <ImageCropper classList={[]} src={'/img/1975-free-love.png'} alt={'test'} constrain={true} cssPath={'js/components/generic/generic-image-cropper/css/generic-image-cropper.css'} cropCallback={cropCallback}/>
+    ,document.getElementById('img')
+  );*/
+}
+
 let instance = Axios.create({
   baseURL: 'http://localhost:3000/product/',
   timeout: 1000
 });
 
 function cropCallback(imgData){
-  /*let headers = new Headers();
-  headers.set('Content-Type', 'application/json')
-  let request = new Request('http://localhost:3000/produck/saveproduct',{
-    headers: headers,
-    method: 'POST',
-    mode: 'no-cors',
-    data: JSON.stringify({imgData: Helpers.getBase64FromUrl(imgData)}),
-  });
-  request.headers.append('Content-Type', 'application/json');
-  console.log(request.headers.get('Content-Type'), headers.get('Content-Type'));
-  fetch('http://localhost:3000/produck/saveproduct',{
-    headers: headers,
-
-    mode: 'no-cors',
-    data: JSON.stringify({imgData: Helpers.getBase64FromUrl(imgData)}),
-  }).then().catch();*/
-  //data: JSON.stringify({imgData: Helpers.getBase64FromUrl(imgData)})
   instance.post('/saveproduct', {imgData: Helpers.getBase64FromUrl(imgData)},{
-    headers: {'Content-Type':'application/json'}
+    headers: {
+      'Content-Type':'application/json'
+    }
   })
   .then(function (response) {
     console.log(response);
@@ -89,10 +103,15 @@ export default function renderView() {
     <Category categories={categories} keyIterator={initGenerator()} classList={['']}
     listElementClassList={['list-element']} cssPath={'js/components/generic/generic-category-menu/css/generic-category-menu.css'} enableShadowRoot={true} collapsible={true} collapseOnChange={false}/>
     , document.getElementById('list')
-  );*/
+  );
+  Upload
   ReactDOM.render(
     <ImageCropper classList={[]} src={'/img/1975-free-love.png'} alt={'test'} constrain={true} cssPath={'js/components/generic/generic-image-cropper/css/generic-image-cropper.css'} cropCallback={cropCallback}/>
     ,document.getElementById('img')
+  );*/
+  ReactDOM.render(
+    <Upload classList={['wrapper']} useAdvanced={true} filesUploadCallback={filesUploadCallback} allowMultipleUploads={false} enableShadowRoot={true} cssPath={'js/components/generic/generic-file-upload/css/generic-file-upload.css'}/>
+    ,document.getElementById('container')
   );
 }
 

@@ -2,7 +2,12 @@ import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
 
-const reactElementSymbol = (<a></a>).$$typeof;
+/*props{
+  content: Element,
+  capped: int,
+  classList: []
+}
+*/
 
 export default class GenericDescriptionOutput extends React.Component {
   constructor(props) {
@@ -14,8 +19,8 @@ export default class GenericDescriptionOutput extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.cssClasses)
-      this.setState({cssClasses: nextProps.cssClasses});
+    if(nextProps.classList)
+      this.setState({cssClasses: nextProps.classList});
   }
 
   trimContent(content){

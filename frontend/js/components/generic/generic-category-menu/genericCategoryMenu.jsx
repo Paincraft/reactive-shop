@@ -3,9 +3,18 @@ import _ from 'lodash';
 import CategoryItem from '../base/EnchancedLi.jsx';
 import classNames from 'classnames';
 import ShadowDOM from 'react-shadow';
+import Helpers from '../../../helpers/helpers.jsx';
 
 const reactElementSymbol = (<a></a>).$$typeof;
-
+/*
+props{
+  keyIterator: Iterator,
+  classList: [],
+  hoverable: boolean,
+  enableShadowRoot: boolean,
+  cssPath: ''
+}
+*/
 export default class GenericCategoryMenu extends React.Component {
   constructor(props) {
     super(props);
@@ -74,9 +83,7 @@ export default class GenericCategoryMenu extends React.Component {
             {result}
           </div>
     )}
-    if(this.props.enableShadowRoot){
-      result = (<ShadowDOM include={[this.props.cssPath]}><div>{result}</div></ShadowDOM>)
-    }
+    if(this.props.enableShadowRoot) return Helpers.wrapInShadowRoot(result, this.props.cssPath);
     return result;
   }
 }

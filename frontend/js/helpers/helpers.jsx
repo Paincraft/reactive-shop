@@ -1,3 +1,5 @@
+import React from 'react';
+import ShadowDOM from 'react-shadow';
 
 function *keyGenerator (initkey, increaseOperation) {
   yield initkey;
@@ -82,5 +84,20 @@ export default class Helpers{
     let match = new RegExp(/^data:\S+,/g);
     url = match[Symbol.replace](url,'');
     return url;
+  }
+
+  static browserSupportsAdvancedUpload(){
+    let div = document.createElement('div');
+    return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+  }
+
+  static wrapInShadowRoot(content, cssPath){
+    return (
+      <ShadowDOM include={[cssPath]}>
+        <div>
+          {content}
+        </div>
+      </ShadowDOM>
+    )
   }
 }

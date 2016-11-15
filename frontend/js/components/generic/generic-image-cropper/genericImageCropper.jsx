@@ -5,6 +5,13 @@ import Helpers from '../../../helpers/helpers.jsx';
 import ShadowDOM from 'react-shadow';
 
 //based on http://tympanus.net/codrops/2014/10/30/resizing-cropping-images-canvas/
+/*props{
+  src: "",
+  classList: [],
+  cropCallback: function
+}
+*/
+
 export default class GenericImageCropper extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +32,7 @@ export default class GenericImageCropper extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.cssClasses)
+    if(nextProps.classList)
       this.setState({cssClasses: classNames('main-overlay', this.props.classList)});
   }
 
@@ -182,26 +189,24 @@ export default class GenericImageCropper extends React.Component {
   }
 
   render() {
-    return (
-      <ShadowDOM include={[this.props.cssPath]}>
-        <div>
-          <div className={this.state.cssClasses}>
-            <div ref={(overlay) => {this.overlay = overlay}} className="overlay">
-              <div className="overlay-inner"></div>
-            </div>
-
-            <div ref={(wrapper) => {this.wrapper = wrapper}} className={'resize-container'} onMouseDown={this.handleOnMouseDownMove.bind(this)}>
-              <span className="resize-handle resize-handle-nw" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
-              <span className="resize-handle resize-handle-ne" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
-              <img className="resize-image" ref={(image) => {this.image = image}} src={this.props.src} alt={this.props.alt}/>
-              <span className="resize-handle resize-handle-se" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
-              <span className="resize-handle resize-handle-sw" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
-            </div>
-
-            <button onClick={this.crop.bind(this)} className="btn-crop js-crop">Crop</button>
-          </div>
+    let componentUI = (
+      <div className={this.state.cssClasses}>
+        <div ref={(overlay) => {this.overlay = overlay}} className="overlay">
+          <div className="overlay-inner"></div>
         </div>
-      </ShadowDOM>
-    );
+
+        <div ref={(wrapper) => {this.wrapper = wrapper}} className={'resize-container'} onMouseDown={this.handleOnMouseDownMove.bind(this)}>
+          <span className="resize-handle resize-handle-nw" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
+          <span className="resize-handle resize-handle-ne" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
+          <img className="resize-image" ref={(image) => {this.image = image}} src={this.props.src} alt={this.props.alt}/>
+          <span className="resize-handle resize-handle-se" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
+          <span className="resize-handle resize-handle-sw" onMouseDown={this.handleOnMouseDownResize.bind(this)}></span>
+        </div>
+
+        <button onClick={this.crop.bind(this)} className="btn-crop js-crop">Crop</button>
+      </div>
+    )
+    if(this.props.enableShadowRoot) return Helpers.wrapInShadowRoot(componentUI, this.props.cssPath);
+    return componentUI;
   }
 }

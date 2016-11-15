@@ -1,7 +1,20 @@
 import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
-
+/*
+props{
+  classList: [],
+  collapsible: boolean,
+  hoverable: boolean,
+  currentActiveChild: Element,
+  onClick: function,
+  eventkey: '',
+  category: '',
+  submenu: Element,
+  parentsList: [],
+  currentActiveChildParentsList,
+}
+*/
 export default class EnchancedLi extends React.Component {
   constructor(props) {
     super(props);

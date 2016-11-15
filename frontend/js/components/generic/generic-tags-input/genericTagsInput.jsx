@@ -3,8 +3,15 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import EnchancedSpan from '../base/EnchancedSpan.jsx';
 import Helpers from '../../../helpers/helpers.jsx';
-import ShadowDOM from 'react-shadow';
-
+/*
+props{
+  keyIterator: Iterator,
+  tagsList: [],
+  classList: [],
+  enableShadowRoot: boolean,
+  cssPath: ''
+}
+*/
 const reactElementSymbol = (<a></a>).$$typeof;
 const SEPARATOR_KEY = 32;
 const SEPARATOR = ' ';
@@ -18,13 +25,13 @@ function prepareTagObjects(list, keyIterator){
   })
 }
 
-export default class genericTagsInput extends React.Component {
+export default class GenericTagsInput extends React.Component {
   constructor(props) {
     super(props);
     this.keyIterator = this.props.keyIterator || Helpers.createDefaultKeyGenerator();
     this.state = {
       tags: Array.isArray(this.props.tagsList) ? prepareTagObjects(this.props.tagsList, this.keyIterator) : [],
-      cssClasses: classNames(['tags-input'], this.props.classList)
+      cssClasses: classNames(['tags-input'], this.props.tagsList)
     };
   }
 
@@ -118,25 +125,23 @@ export default class genericTagsInput extends React.Component {
     let wrapContent = (content,idx) => {
       return (<span data-eventkey={content.eventkey}>{content.tag}<i style={{paddingLeft:'4px'}} onClick={this.handleDelete.bind(this)} data-eventkey={content.eventkey} className={'fa fa-times'} aria-hidden="true"></i></span>)
     }
-    return (
-      <ShadowDOM include={[this.props.cssPath, this.props.fontAwesomePath]}>
-        <div>
-          <div ref={(wrapper) => {this.wrapper = wrapper}} onKeyDown={this.handleOnKeyDown.bind(this)}  tabIndex={'1'} className={this.state.cssClasses} id={this.props.id}>
-            {(() => {
-              if(!this.props.output){
-                return (<input onKeyDown={this.handleOnKeyDown.bind(this)} type='text'/>);
-              }
-            })()}
-            {this.state.tags.map((value, idx) => {
-              let content = value.tag;
-              if(this.props.useFontAwesome && !this.props.output){
-                content = wrapContent(value,idx);
-              }
-              return (<EnchancedSpan disableClick={this.props.disableTagActivation || this.props.output} classList={'tag'} key={idx} eventkey={value.eventkey} content={content} />);
-            })}
-          </div>
-        </div>
-      </ShadowDOM>
+    let componentUI =  (
+      <div ref={(wrapper) => {this.wrapper = wrapper}} onKeyDown={this.handleOnKeyDown.bind(this)}  tabIndex={'1'} className={this.state.cssClasses} id={this.props.id}>
+        {(() => {
+          if(!this.props.output){
+            return (<input onKeyDown={this.handleOnKeyDown.bind(this)} type='text'/>);
+          }
+        })()}
+        {this.state.tags.map((value, idx) => {
+          let content = value.tag;
+          if(this.props.useFontAwesome && !this.props.output){
+            content = wrapContent(value,idx);
+          }
+          return (<EnchancedSpan disableClick={this.props.disableTagActivation || this.props.output} classList={'tag'} key={idx} eventkey={value.eventkey} content={content} />);
+        })}
+      </div>
     )
+    if(this.props.enableShadowRoot) return Helpers.wrapInShadowRoot(componentUI, this.props.cssPath);
+    return componentUI;
   }
 }

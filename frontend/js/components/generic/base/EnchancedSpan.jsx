@@ -1,6 +1,13 @@
 import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
+/*
+props{
+  classList: [],
+  disableClick: boolean,
+  onClick: function
+}
+*/
 
 export default class EnchancedSpan extends React.Component {
   constructor(props) {

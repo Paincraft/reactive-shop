@@ -3,6 +3,7 @@ import _ from 'lodash';
 import ShadowDOM from 'react-shadow';
 import classNames from 'classnames';
 import GenricList from '../generic-category-menu/genericCategoryMenu.jsx';
+import Helpers from '../../../helpers/helpers.jsx';
 
 const TOP = Symbol.for('top');
 const BOTTOM = Symbol.for('bottom');
@@ -48,16 +49,14 @@ export default class GenericMenu extends React.Component {
       return wrapCategory(Item);
     })
 
-    return (
-      <ShadowDOM include={[this.props.cssPath]}>
-        <div>
-          <menu className={this.state.cssClasses}>
-            <nav>
-              <GenricList categories={wrappedMenuItems} hoverable={true} collapsible={false} listElementClassList={this.props.listElementClassList} collapseOnChange={false}/>
-            </nav>
-          </menu>
-        </div>
-      </ShadowDOM>
-    )
+    let componentUI = (
+      <menu className={this.state.cssClasses}>
+        <nav>
+          <GenricList categories={wrappedMenuItems} hoverable={true} collapsible={false} listElementClassList={this.props.listElementClassList} collapseOnChange={false}/>
+        </nav>
+      </menu>
+    );
+    if(this.props.enableShadowRoot) return Helpers.wrapInShadowRoot(componentUI, this.props.cssPath);
+    return componentUI;
   }
 }

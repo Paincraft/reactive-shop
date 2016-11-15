@@ -8,6 +8,7 @@
 .resize-container img {
     display: block;
     max-width:600px;
+    margin: auto;
 }
 
 .resize-container:hover img,
@@ -115,8 +116,8 @@
 .btn-crop {
     position: absolute;
     vertical-align: bottom;
-    right: 5px;
-    bottom: 5px;
+    right: 25px;
+    bottom: 25px;
     padding: 6px 10px;
     z-index: 999;
     background-color: rgb(222,60,80);
@@ -132,5 +133,6 @@
   width: 100vw;
   height: 100vh;
   z-index: 998;
-  background-color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
