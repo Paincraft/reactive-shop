@@ -8,9 +8,12 @@ import Menu from './components/generic/generic-menu/genericMenu.jsx';
 import Helpers from './helpers/helpers.jsx';
 import TagsInput from './components/generic/generic-tags-input/genericTagsInput.jsx';
 import ImageCropper from './components/generic/generic-image-cropper/genericImageCropper.jsx';
+import AddProductForm from './components/admin/addProductForm.jsx';
 //import Description from './components/generic/generic-description-output/genericDescriptionOutput.jsx';
 //Upload
 import Upload from './components/generic/generic-file-upload/genericFileUpload.jsx';
+import Select from './components/generic/generic-select/genericSelect.jsx';
+import EnchancedBasicElement from './components/generic/base/EnchancedBasicElement.jsx';
 let data = [
   {
     key: 1,
@@ -24,12 +27,9 @@ let data = [
 ]
 
 let categories = {
-  categoryLevel1: {
-    subCategoryLevel1_1:'subCategoryLevel1_1',
-    subCategoryLevel1_2:'subCategoryLevel1_2'
-  },
-  categoryLevel1_1: {subCategoryLevel1_1: {subCategoryLevel2: 'subCategoryLevel2'}},
-  categoryLevel1_2: 'categoryLevel1_2'
+  categoryLevel1: ['subCategoryLevel1_1', 'subCategoryLevel1_2'],
+  categoryLevel1_1: {subCategoryLevel1_1: ['subCategoryLevel2']},
+  categoryLevel1_2: []
 }
 
 let menuItems = ['home','porn','about'];
@@ -61,10 +61,6 @@ function filesUploadCallback(files){
   }
 
   return {error: {isError: false}};
-  /*ReactDOM.render(
-    <ImageCropper classList={[]} src={'/img/1975-free-love.png'} alt={'test'} constrain={true} cssPath={'js/components/generic/generic-image-cropper/css/generic-image-cropper.css'} cropCallback={cropCallback}/>
-    ,document.getElementById('img')
-  );*/
 }
 
 let instance = Axios.create({
@@ -88,6 +84,42 @@ function cropCallback(imgData){
 
 export default function renderView() {
   /*ReactDOM.render(
+    <Upload classList={['wrapper']} useAdvanced={true} filesUploadCallback={filesUploadCallback} allowMultipleUploads={false} enableShadowRoot={true} cssPath={'js/components/generic/generic-file-upload/css/generic-file-upload.css'}/>
+    ,document.getElementById('container')
+  );*/
+  /*ReactDOM.render(
+    <AddProductForm id={'form'} classList={[]}/>
+    ,document.getElementById('container')
+  );*/
+  /*ReactDOM.render(
+    <Select id={'form'} classList={[]} options={menuItems} />
+    ,document.getElementById('container')
+  );*/
+  ReactDOM.render(
+    <Category categories={categories} keyIterator={initGenerator()} classList={['']}
+    listElementClassList={['list-element']} cssPath={'js/components/generic/generic-category-menu/css/generic-category-menu.css'} enableShadowRoot={true} hoverable={true} collapsible={true} collapseOnChange={false}/>
+    , document.getElementById('list')
+  );
+}
+
+//20160421_143103.jpg
+/*ReactDOM.render(
+<ProductList products={data} collapsible={true}/>
+  <Menu classList={['menu']} menuItems={menuItems} keyIterator={initGenerator()} cssPath={'js/components/generic/generic-menu/css/generic-menu.css'}
+  listElementClassList={['list-element']} wrapperClassList={''} />
+
+  <Category categories={categories} keyIterator={initGenerator()} classList={['']}
+  listElementClassList={['list-element']} cssPath={'js/components/generic/generic-category-menu/css/generic-category-menu.css'} enableShadowRoot={true}/>
+
+  */
+
+  /*ReactDOM.render(
+    <Category categories={categories} keyIterator={initGenerator()} classList={['']}
+    listElementClassList={['list-element']} cssPath={'js/components/generic/generic-category-menu/css/generic-category-menu.css'} enableShadowRoot={true} collapsible={true} collapseOnChange={true}/>
+    , document.getElementById('container')
+  );*/
+
+  /*ReactDOM.render(
     <Menu classList={['menu']} menuItems={menuItems} keyIterator={initGenerator()} cssPath={'js/components/generic/generic-menu/css/generic-menu.css'}
     listElementClassList={['list-element']} wrapperClassList={''} collapsible={false} position={Symbol.for('top')}/>
     , document.getElementById('menu')
@@ -108,26 +140,4 @@ export default function renderView() {
   ReactDOM.render(
     <ImageCropper classList={[]} src={'/img/1975-free-love.png'} alt={'test'} constrain={true} cssPath={'js/components/generic/generic-image-cropper/css/generic-image-cropper.css'} cropCallback={cropCallback}/>
     ,document.getElementById('img')
-  );*/
-  ReactDOM.render(
-    <Upload classList={['wrapper']} useAdvanced={true} filesUploadCallback={filesUploadCallback} allowMultipleUploads={false} enableShadowRoot={true} cssPath={'js/components/generic/generic-file-upload/css/generic-file-upload.css'}/>
-    ,document.getElementById('container')
-  );
-}
-
-//20160421_143103.jpg
-/*ReactDOM.render(
-<ProductList products={data} collapsible={true}/>
-  <Menu classList={['menu']} menuItems={menuItems} keyIterator={initGenerator()} cssPath={'js/components/generic/generic-menu/css/generic-menu.css'}
-  listElementClassList={['list-element']} wrapperClassList={''} />
-
-  <Category categories={categories} keyIterator={initGenerator()} classList={['']}
-  listElementClassList={['list-element']} cssPath={'js/components/generic/generic-category-menu/css/generic-category-menu.css'} enableShadowRoot={true}/>
-
-  */
-
-  /*ReactDOM.render(
-    <Category categories={categories} keyIterator={initGenerator()} classList={['']}
-    listElementClassList={['list-element']} cssPath={'js/components/generic/generic-category-menu/css/generic-category-menu.css'} enableShadowRoot={true} collapsible={true} collapseOnChange={true}/>
-    , document.getElementById('container')
   );*/

@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
-import EnchancedSpan from '../base/EnchancedSpan.jsx';
+import EnchancedBasicElement from '../base/EnchancedBasicElement.jsx';
 import Helpers from '../../../helpers/helpers.jsx';
 /*
 props{
@@ -137,7 +137,7 @@ export default class GenericTagsInput extends React.Component {
           if(this.props.useFontAwesome && !this.props.output){
             content = wrapContent(value,idx);
           }
-          return (<EnchancedSpan disableClick={this.props.disableTagActivation || this.props.output} classList={'tag'} key={idx} eventkey={value.eventkey} content={content} />);
+          return (<EnchancedBasicElement clickable={!this.props.disableTagActivation || !this.props.output} classList={'tag'} key={idx} eventkey={value.eventkey} content={content} />);
         })}
       </div>
     )

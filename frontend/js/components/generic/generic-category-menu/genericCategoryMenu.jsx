@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import CategoryItem from '../base/EnchancedLi.jsx';
+import CategoryItem from './genericCategoryItem.jsx';
 import classNames from 'classnames';
 import ShadowDOM from 'react-shadow';
 import Helpers from '../../../helpers/helpers.jsx';
@@ -20,7 +20,6 @@ export default class GenericCategoryMenu extends React.Component {
     super(props);
     this.state = {
       currentActiveChild: '',
-      hoverable: this.props.hoverable,
       cssClasses: classNames(this.props.classList)
     };
   }
@@ -29,20 +28,29 @@ export default class GenericCategoryMenu extends React.Component {
   onClickCallback(rootCtx) {
     return  (event, childEventKey, parentsList) => {
       rootCtx.setState({currentActiveChild: childEventKey, currentActiveChildParentsList: parentsList});
+      console.log('currentActiveChild', childEventKey);
     }
   }
 
-  parseCategories(categoryObj, initKey, parentsList = [], deep) {
+  parseCategories(categoryObj, initKey, parentsList = [], level = 0) {
     let eventkey;
     let tmpParentsList;
     let opts;
     return (
       <ul>
         {Object.keys(categoryObj).map(((key, idx) => {
-          eventkey = `eventkey${initKey}${idx}`;
+          eventkey = `number${idx}root${initKey}level${level}`;
           tmpParentsList = parentsList.slice();
           tmpParentsList.push(eventkey);
-          if (categoryObj[key] && (Array.isArray(categoryObj[key]) || (typeof categoryObj[key] === 'object' && categoryObj[key].$$typeof !== reactElementSymbol))) {
+
+          /*
+            category1:{
+              subcategory1: ['subcategory1_1']
+            }
+          */
+          let bottomLevel = Array.isArray(categoryObj);
+          if(eventkey === 'number1root0level1') console.log('top', categoryObj);
+          if (!bottomLevel && categoryObj[key]){
             //console.log(tmp)
             /*opts = {
               hoverable:this.state.hoverable,
@@ -57,12 +65,13 @@ export default class GenericCategoryMenu extends React.Component {
               currentActiveChildParentsList: this.state.currentActiveChildParentsList,
               collapseOnChange: this.props.collapseOnChange
             }*/
+
             return (
-              <CategoryItem hoverable={this.state.hoverable} eventkey={eventkey} collapsible={this.props.collapsible} key={`${initKey}${idx}`} category={key} submenu={this.parseCategories(categoryObj[key], initKey+1, tmpParentsList.slice(), true)} classList={this.props.listElementClassList} currentActiveChild={this.state.currentActiveChild} onClick={this.onClickCallback(this)} parentsList={tmpParentsList.slice()} currentActiveChildParentsList={this.state.currentActiveChildParentsList} collapseOnChange={this.props.collapseOnChange}/>
+              <CategoryItem hoverable={this.props.hoverable} eventkey={eventkey} collapsible={this.props.collapsible} key={eventkey} category={key} submenu={this.parseCategories(categoryObj[key], idx, tmpParentsList.slice(), level+1)} classList={this.props.listElementClassList} currentActiveChild={this.state.currentActiveChild} onClick={this.onClickCallback(this)} parentsList={tmpParentsList.slice()} currentActiveChildParentsList={this.state.currentActiveChildParentsList} collapseOnChange={this.props.collapseOnChange} />
             )
           } else {
             return (
-              <CategoryItem hoverable={this.state.hoverable} eventkey={eventkey} key={`${initKey}${idx}`} category={categoryObj[key]} classList={this.props.listElementClassList} currentActiveChild={this.state.currentActiveChild} onClick={this.onClickCallback(this)} parentsList={tmpParentsList.slice()} currentActiveChildParentsList={this.state.currentActiveChildParentsList} collapseOnChange={this.props.collapseOnChange}/>
+              <CategoryItem hoverable={this.props.hoverable} eventkey={eventkey} key={eventkey} category={categoryObj[key]} classList={this.props.listElementClassList} currentActiveChild={this.state.currentActiveChild} onClick={this.onClickCallback(this)} parentsList={tmpParentsList.slice()} currentActiveChildParentsList={this.state.currentActiveChildParentsList} collapseOnChange={this.props.collapseOnChange}/>
             )
           }
         }).bind(this))}
