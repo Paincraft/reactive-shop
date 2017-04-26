@@ -30,9 +30,9 @@ export default class EnchancedBasicElement extends React.Component {
 
   handleClick(event) {
     event.preventDefault();
-    event.stopPropagation();
     let newState = {};
     if(this.props.clickable){
+      event.stopPropagation();
       newState.active = !this.state.active;
       this.setState(newState);
     }
@@ -42,10 +42,10 @@ export default class EnchancedBasicElement extends React.Component {
 
   handleOnMouse(event){
     event.preventDefault();
-    event.stopPropagation();
     let newState = {};
     if(this.props.hoverable){
-      newState.hover = (event.type === 'mouseover') ? true : false;
+      event.stopPropagation();
+      newState.hover = (event.type === 'mouseenter') ? true : false;
       this.setState(newState);
     }
     if(this.props.onMouseOver && typeof this.props.onMouseOver === 'function' && event.type === 'mouseover'){
@@ -61,8 +61,10 @@ export default class EnchancedBasicElement extends React.Component {
 
   componentWillReceiveProps(nextProps){
     let newState = {};
-    if(!this.props.clickable) newState.active = nextProps.active;
-    this.setState(newState);
+    if(!this.props.clickable){
+      newState.active = nextProps.active;
+      this.setState(newState);
+    }
   }
 
   componentWillUpdate(nextProps, nextState){
@@ -71,12 +73,12 @@ export default class EnchancedBasicElement extends React.Component {
 
   render() {
     let props = {
-      onMouseOver: this.handleOnMouse.bind(this),
+      onMouseEnter: this.handleOnMouse.bind(this),
       onMouseLeave: this.handleOnMouse.bind(this),
       onClick: this.handleClick.bind(this),
       className: this.cssClasses,
       'data-eventkey': this.props.eventkey,
-      key: this.props.eventkey
+      key: this.props.eventkey ? this.props.eventkey : null
     }
 
     return React.createElement(this.props.element, props, this.props.content);

@@ -25,11 +25,38 @@ li a {
     text-decoration: none;
 }
 
-/* Change the link color to #111 (black) on hover */
-.hovered {
-    background-color: #111;
+.submenu li{
+  float: none;
 }
 
-.active {
+.submenu ul{
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+ .submenu > ul{
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+
+.submenu.hovered > ul{
+  display: inline-block;
+  min-width: 160px;
+}
+
+.hovered {
     background-color: #4CAF50;
 }

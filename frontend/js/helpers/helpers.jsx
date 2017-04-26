@@ -5,11 +5,21 @@ function *keyGenerator (initkey, increaseOperation) {
   yield initkey;
   //let iter = initkey;
   let nextKey = increaseOperation(initkey);
-  let reset = false;
-  while (true) {
+  let stop = false;
+  while (!stop) {
     nextKey = increaseOperation(nextKey);
-    yield nextKey;
+    stop = yield nextKey;
   }
+}
+
+function createGenerator(operation){
+  let gen = function *(value){
+    let result;
+    while(value){
+      value = yield operation(value);
+    }
+  }
+  return gen;
 }
 
 export default class Helpers{

@@ -10,6 +10,14 @@ const BOTTOM = Symbol.for('bottom');
 const LEFT = Symbol.for('left');
 const RIGHT = Symbol.for('right');
 
+function parseCategories(categories){
+  return categories.map((category) => {
+    category.content = (<a href="#">{category.name}</a>);
+    if(category.subcategories) category.subcategories = parseCategories(category.subcategories);
+    return category;
+  });
+}
+
 export default class GenericMenu extends React.Component {
   constructor(props) {
     super(props);
@@ -29,6 +37,14 @@ export default class GenericMenu extends React.Component {
       position: (this.props.position === TOP || this.props.position === BOTTOM || this.props.position === LEFT || this.props.position === RIGHT) ? this.props.position : TOP,
       collapsed: false
     };
+
+    this.wrapperObject = {
+      element: 'a',
+      props: {
+        style: {pointerEvents: 'none'},
+        href: '#'
+      },
+    }
   }
 
   handleOnKeyUp(event) {
@@ -41,18 +57,12 @@ export default class GenericMenu extends React.Component {
   }
 
   render() {
-    let wrapCategory = (category) => {
-      return (<a style={{pointerEvents: 'none'}}>{category}</a>)
-    }
-
-    let wrappedMenuItems = this.props.menuItems.map((Item) => {
-      return wrapCategory(Item);
-    })
-
+    let categories = parseCategories(this.props.menuItems);
+    console.log(categories);
     let componentUI = (
       <menu className={this.state.cssClasses}>
         <nav>
-          <GenricList categories={wrappedMenuItems} hoverable={true} collapsible={false} listElementClassList={this.props.listElementClassList} collapseOnChange={false}/>
+          <GenricList categories={categories} wrapperObject={this.wrapperObject} hoverable={true} collapsible={false} listElementClassList={this.props.listElementClassList} collapseOnChange={false}/>
         </nav>
       </menu>
     );

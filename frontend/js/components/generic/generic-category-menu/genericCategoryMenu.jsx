@@ -38,43 +38,17 @@ export default class GenericCategoryMenu extends React.Component {
     let opts;
     return (
       <ul>
-        {Object.keys(categoryObj).map(((key, idx) => {
+        {categoryObj.map((elem, idx) => {
           eventkey = `number${idx}root${initKey}level${level}`;
           tmpParentsList = parentsList.slice();
           tmpParentsList.push(eventkey);
-
-          /*
-            category1:{
-              subcategory1: ['subcategory1_1']
-            }
-          */
-          let bottomLevel = Array.isArray(categoryObj);
-          if(eventkey === 'number1root0level1') console.log('top', categoryObj);
-          if (!bottomLevel && categoryObj[key]){
-            //console.log(tmp)
-            /*opts = {
-              hoverable:this.state.hoverable,
-              eventkey: eventkey,
-              collapsible: this.props.collapsible,
-              category: (categoryObj[key] && Array.isArray(categoryObj[key])) ? key : categoryObj[key],
-              submenu: (categoryObj[key] && Array.isArray(categoryObj[key])) ? this.parseCategories(categoryObj[key], initKey+1, tmpParentsList.slice(), true) : null,
-              classList: this.props.listElementClassList,
-              currentActiveChild: this.state.currentActiveChild,
-              onClick: this.onClickCallback(this),
-              parentsList: tmpParentsList.slice(),
-              currentActiveChildParentsList: this.state.currentActiveChildParentsList,
-              collapseOnChange: this.props.collapseOnChange
-            }*/
-
-            return (
-              <CategoryItem hoverable={this.props.hoverable} eventkey={eventkey} collapsible={this.props.collapsible} key={eventkey} category={key} submenu={this.parseCategories(categoryObj[key], idx, tmpParentsList.slice(), level+1)} classList={this.props.listElementClassList} currentActiveChild={this.state.currentActiveChild} onClick={this.onClickCallback(this)} parentsList={tmpParentsList.slice()} currentActiveChildParentsList={this.state.currentActiveChildParentsList} collapseOnChange={this.props.collapseOnChange} />
-            )
-          } else {
-            return (
-              <CategoryItem hoverable={this.props.hoverable} eventkey={eventkey} key={eventkey} category={categoryObj[key]} classList={this.props.listElementClassList} currentActiveChild={this.state.currentActiveChild} onClick={this.onClickCallback(this)} parentsList={tmpParentsList.slice()} currentActiveChildParentsList={this.state.currentActiveChildParentsList} collapseOnChange={this.props.collapseOnChange}/>
-            )
+          if(elem.subcategories){
+            let submenu = this.parseCategories(elem.subcategories, idx, tmpParentsList.slice(), level+1);
+            return (<CategoryItem hoverable={this.props.hoverable} eventkey={eventkey} collapsible={this.props.collapsible} key={eventkey} category={elem.content} submenu={submenu} classList={this.props.listElementClassList.concat('submenu')} currentActiveChild={this.state.currentActiveChild}  currentActiveChildParentsList={this.state.currentActiveChildParentsList} collapseOnChange={this.props.collapseOnChange} onClick={this.onClickCallback(this)} parentsList={tmpParentsList.slice()} />);
+          }else{
+            return (<CategoryItem hoverable={this.props.hoverable} eventkey={eventkey} key={eventkey} category={elem.content} classList={this.props.listElementClassList} currentActiveChild={this.state.currentActiveChild} onClick={this.onClickCallback(this)} parentsList={tmpParentsList.slice()} currentActiveChildParentsList={this.state.currentActiveChildParentsList} collapseOnChange={this.props.collapseOnChange}/>);
           }
-        }).bind(this))}
+        })}
       </ul>
     )
   }

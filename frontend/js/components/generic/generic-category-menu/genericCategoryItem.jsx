@@ -20,7 +20,7 @@ export default class GenericCategoryItem extends React.Component {
   constructor(props) {
     super(props);
     this.setCssClasses = function(state){
-        return classNames(this.props.classList, {collapsible: this.props.collapsible, collapsed: state.collapsed})
+      return classNames(this.props.classList, {collapsible: this.props.collapsible, collapsed: state.collapsed})
     }
     this.state = {
       active: false,
@@ -62,8 +62,6 @@ export default class GenericCategoryItem extends React.Component {
       }
       newState.cssClasses = this.setCssClasses(newState);
     }
-    //if(this.props.eventkey === 'number1root0level1') console.log('genericCategoryItem active set', nextProps, newState)
-    if(this.props.eventkey === 'number1root0level1') console.log('deactivate', deactivateChild, nextProps.currentActiveChild, this.state.currentActiveElement)
     this.setState(newState);
   }
 
@@ -73,7 +71,7 @@ export default class GenericCategoryItem extends React.Component {
 
   render() {
     return (
-      <EnchancedBasicElement clickable={false} active={this.state.active} hoverable={this.props.hoverable} onClick={this.handleClick.bind(this)} classList={this.state.cssClasses} element={'li'} eventkey={this.props.eventkey} content={[this.props.category, this.props.submenu]} />
+      <EnchancedBasicElement key={this.props.eventkey} clickable={false} active={this.state.active} hoverable={this.props.hoverable} onClick={this.handleClick.bind(this)} classList={this.state.cssClasses} element={'li'} eventkey={this.props.eventkey} content={[this.props.category, this.props.submenu]} />
     );
   }
 }

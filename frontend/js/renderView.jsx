@@ -14,6 +14,7 @@ import AddProductForm from './components/admin/addProductForm.jsx';
 import Upload from './components/generic/generic-file-upload/genericFileUpload.jsx';
 import Select from './components/generic/generic-select/genericSelect.jsx';
 import EnchancedBasicElement from './components/generic/base/EnchancedBasicElement.jsx';
+
 let data = [
   {
     key: 1,
@@ -26,13 +27,46 @@ let data = [
   }
 ]
 
-let categories = {
-  categoryLevel1: ['subCategoryLevel1_1', 'subCategoryLevel1_2'],
-  categoryLevel1_1: {subCategoryLevel1_1: ['subCategoryLevel2']},
-  categoryLevel1_2: []
-}
+let menuItems = ['test', 'more tests', 'some val', 'other val'];
 
-let menuItems = ['home','porn','about'];
+let categories= [
+  {
+    name: "categoryLevel1",
+    id: "categoryLevel1",
+    subcategories: [
+      {
+        name: "subCategoryLevel1_1",
+        id: "subCategoryLevel1_1",
+      },
+      {
+        name: "subCategoryLevel1_2",
+        id: "subCategoryLevel1_2",
+      }
+    ]
+  },
+  {
+    name: 'categoryLevel1_1',
+    id: 'categoryLevel1_1',
+    subcategories: [
+      {
+        name: 'subCategoryLevel1_1',
+        id: 'subCategoryLevel1_1',
+        subcategories: [
+          {
+            name: 'subCategoryLevel1_2',
+            id: 'subCategoryLevel1_2',
+          }
+        ]
+      }
+    ]
+  },
+  {
+    name: "categoryLevel1_2",
+    id: "categoryLevel1_2",
+  }
+]
+
+
 //here we implement logic
 function initGenerator() {
   return Helpers.createKeyGenerator(0,(key) => {
@@ -87,19 +121,34 @@ export default function renderView() {
     <Upload classList={['wrapper']} useAdvanced={true} filesUploadCallback={filesUploadCallback} allowMultipleUploads={false} enableShadowRoot={true} cssPath={'js/components/generic/generic-file-upload/css/generic-file-upload.css'}/>
     ,document.getElementById('container')
   );*/
-  /*ReactDOM.render(
-    <AddProductForm id={'form'} classList={[]}/>
+  ReactDOM.render(
+    <AddProductForm id={'form'} enableShadowRoot={true} cssPath={'js/components/admin/css/addProductForm.css'} css={{form: 'formWrapper', formField: 'formField'}}/>
     ,document.getElementById('container')
-  );*/
+  );
   /*ReactDOM.render(
     <Select id={'form'} classList={[]} options={menuItems} />
     ,document.getElementById('container')
   );*/
+  /*ReactDOM.render(
+    <Menu classList={['menu']} menuItems={categoriesNew} keyIterator={initGenerator()} cssPath={'js/components/generic/generic-menu/css/generic-menu.css'}
+    enableShadowRoot={true} listElementClassList={['list-element']} wrapperClassList={''} collapsible={false} position={Symbol.for('top')}/>
+    , document.getElementById('menu')
+  );*/
+  /*let css = {
+    inputWrapper: 'inputWrapper',
+    inputBox: 'inputBox',
+    listElement: 'listElement',
+    list: 'list',
+    selectedBox: 'selectedBox',
+    classList: 'wrapper',
+    singleSelect: 'singleSelect',
+    oneOfSelectedElements: 'oneOfSelectedElements',
+    selectedElement: 'selectedElement'
+  }
   ReactDOM.render(
-    <Category categories={categories} keyIterator={initGenerator()} classList={['']}
-    listElementClassList={['list-element']} cssPath={'js/components/generic/generic-category-menu/css/generic-category-menu.css'} enableShadowRoot={true} hoverable={true} collapsible={true} collapseOnChange={false}/>
-    , document.getElementById('list')
-  );
+    <Select id={'form'} css={css} deleteSelected={false} multipleSelect={false} classList={['wrapper']} options={menuItems} enableShadowRoot={true} cssPath={'js/components/generic/generic-select/css/generic-select.css'}/>
+    ,document.getElementById('container')
+  );*/
 }
 
 //20160421_143103.jpg

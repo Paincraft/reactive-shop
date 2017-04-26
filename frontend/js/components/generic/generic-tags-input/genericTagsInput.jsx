@@ -3,6 +3,7 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import EnchancedBasicElement from '../base/EnchancedBasicElement.jsx';
 import Helpers from '../../../helpers/helpers.jsx';
+import {generateSvgDefinitions, getIconGenerator} from '../../../helpers/iconMoonParser.jsx';
 /*
 props{
   keyIterator: Iterator,
@@ -28,15 +29,17 @@ function prepareTagObjects(list, keyIterator){
 export default class GenericTagsInput extends React.Component {
   constructor(props) {
     super(props);
+    this.iconClose = getIconGenerator('cancel-circle');
     this.keyIterator = this.props.keyIterator || Helpers.createDefaultKeyGenerator();
     this.state = {
       tags: Array.isArray(this.props.tagsList) ? prepareTagObjects(this.props.tagsList, this.keyIterator) : [],
-      cssClasses: classNames(['tags-input'], this.props.tagsList)
+      cssClasses: classNames(this.props.css.wrapper) //tags-input
     };
   }
 
   handleOnKeyDown(event){
     if(this.props.output) return;
+    console.log(this.wrapper);
     let input = this.wrapper.getElementsByTagName('input')[0] || null;
     let key = event.keyCode || event.which;
     let tags = input.value.split(SEPARATOR);
@@ -82,6 +85,8 @@ export default class GenericTagsInput extends React.Component {
       if(update){
         this.setState({tags: newTags});
         input.value = '';
+        if (this.props.onChange && typeof this.props.onChange === 'function')
+          this.props.onChange(newTags);
       }
     }
   }
@@ -102,6 +107,8 @@ export default class GenericTagsInput extends React.Component {
     let newTags = this.state.tags.slice();
     newTags.splice(tagIndex, 1);
     this.setState({tags: newTags});
+    if (this.props.onChange && typeof this.props.onChange === 'function')
+      this.props.onChange(newTags);
   }
 
   deleteSelectedTags(wrapper){
@@ -123,21 +130,21 @@ export default class GenericTagsInput extends React.Component {
 
   render() {
     let wrapContent = (content,idx) => {
-      return (<span data-eventkey={content.eventkey}>{content.tag}<i style={{paddingLeft:'4px'}} onClick={this.handleDelete.bind(this)} data-eventkey={content.eventkey} className={'fa fa-times'} aria-hidden="true"></i></span>)
+      return (<span data-eventkey={content.eventkey}>{[content.tag, <span className={classNames(this.props.css.deleteTagWrapper)}>{this.iconClose({className: classNames(this.props.css.deleteTag), onClick: this.handleDelete.bind(this), "data-eventkey": content.eventkey})}</span>]}</span>)
     }
     let componentUI =  (
       <div ref={(wrapper) => {this.wrapper = wrapper}} onKeyDown={this.handleOnKeyDown.bind(this)}  tabIndex={'1'} className={this.state.cssClasses} id={this.props.id}>
         {(() => {
           if(!this.props.output){
-            return (<input onKeyDown={this.handleOnKeyDown.bind(this)} type='text'/>);
+            return (<input className={classNames(this.props.css.input)} onKeyDown={this.handleOnKeyDown.bind(this)} type='text'/>);
           }
         })()}
         {this.state.tags.map((value, idx) => {
           let content = value.tag;
-          if(this.props.useFontAwesome && !this.props.output){
+          if(!this.props.output){
             content = wrapContent(value,idx);
           }
-          return (<EnchancedBasicElement clickable={!this.props.disableTagActivation || !this.props.output} classList={'tag'} key={idx} eventkey={value.eventkey} content={content} />);
+          return (<EnchancedBasicElement element={"span"} clickable={!this.props.disableTagActivation || !this.props.output} classList={this.props.css.tag} key={idx} eventkey={value.eventkey} content={content} />);
         })}
       </div>
     )

@@ -15,19 +15,50 @@ import Helpers from '../../../helpers/helpers.jsx';
 }
 */
 
+/*
+refactor notes:
+  - internal/external error messages
+  - external success message
+  - messages in divs
+  - div background-color set according to message (red/green)
+  - error/success messages disappering after x seconds
+  - reset after error
+  - progress bar
+*/
+let getLabel = function(label){
+    return (!label && label != "") ? "Choose a file or drag it here." : label;
+}
+
 export default class GenericFileUpload extends React.Component {
   constructor(props) {
     super(props);
     this.useAdvanced = (this.props.useAdvanced && Helpers.browserSupportsAdvancedUpload());
-    this.acceptedFilesTypes = (Array.isArray(this.props.acceptedFilesTypes) && this.props.acceptedFilesTypes.length > 0) ? this.acceptedFilesTypes : ['*'];
-    this.acceptedFilesExtensions = (Array.isArray(this.props.acceptedFilesExtensions) && this.props.acceptedFilesExtensions.length > 0) ? this.acceptedFilesExtensions : ['*'];
+    this.acceptedFilesTypes = (Array.isArray(this.props.acceptedFilesTypes) && this.props.acceptedFilesTypes.length > 0) ? this.props.acceptedFilesTypes : ['*'];
+    this.acceptedFilesExtensions = (Array.isArray(this.props.acceptedFilesExtensions) && this.props.acceptedFilesExtensions.length > 0) ? this.props.acceptedFilesExtensions : ['*'];
     this.state = {
-      cssClasses: classNames(this.props.classList),
-      formCssClasses: classNames('box', {'has-advanced-upload': this.useAdvanced}),
+      cssClasses: classNames(this.props.css.wrapper),
+      formCssClasses: classNames(this.props.css.form,  {'has-advanced-upload': this.useAdvanced}),
       uploading: false,
       error: {isError: false, errorMessage: ''},
-      droppedFiles: []
+      droppedFiles: [],
+      label: getLabel(this.props.label),
+      background: this.props.background
     };
+    this.origialLabel = getLabel(this.props.label);
+    this.originalBackground = this.props.background;
+    this.messageDelay = this.props.messageDelay || 3000;
+  }
+
+  resetState(deep = false){
+    let rootCtx = this;
+    setTimeout(() => {
+      rootCtx.setState({
+        formCssClasses: classNames(this.props.css.form, {'has-advanced-upload': this.useAdvanced}),
+        label: this.origialLabel,
+        background: this.originalBackground,
+        droppedFiles: deep ? [] : rootCtx.state.droppedFiles
+      })
+    }, this.messageDelay);
   }
 
   handleDrag(event){
@@ -37,10 +68,10 @@ export default class GenericFileUpload extends React.Component {
 
     let newState = {error: {isError: false, errorMessage: ''}};
     if(event.type === 'dragover ' || event.type === 'dragover' ){
-      newState.formCssClasses = classNames('box', 'is-dragover', {'has-advanced-upload': this.useAdvanced, 'is-error': this.state.error.isError});
+      newState.formCssClasses = classNames(this.props.css.form,  'is-dragover', {'has-advanced-upload': this.useAdvanced, 'is-error': this.state.error.isError});
     }else if(event.type === 'dragleave' || event.type === 'dragend'  || event.type === 'drop' || event.type === 'change'){
       //cssClasses: classNames(this.props.classList),
-      newState.formCssClasses = classNames('box', {'has-advanced-upload': this.useAdvanced, 'is-error': this.state.error.isError})
+      newState.formCssClasses = classNames(this.props.css.form,  {'has-advanced-upload': this.useAdvanced, 'is-error': this.state.error.isError})
       let toUpload = (event.type === 'drop' || event.type === 'change');
       if(toUpload){
         newState.droppedFiles = this.state.droppedFiles.splice();
@@ -50,8 +81,8 @@ export default class GenericFileUpload extends React.Component {
           })
 
           if(!isAlreadyAdded){
-            let extensionPass = this.acceptedFilesExtensions.includes('*');
-            let typePass = this.acceptedFilesTypes.includes('*');
+            let extensionPass = this.acceptedFilesExtensions.includes('*'); // * is default
+            let typePass = this.acceptedFilesTypes.includes('*'); // * is default
             if(!typePass){
               this.acceptedFilesTypes.forEach((type) => {
                 if(file.type && file.type.includes(type)){
@@ -65,14 +96,16 @@ export default class GenericFileUpload extends React.Component {
                 let lastDot = file.name && file.name.lastIndexOf('.');
                 let fileExtension = lastDot && file.name.substring(lastDot+1)
                 if(fileExtension === extension){
-                  typePass = true;
+                  extensionPass = true;
                   return false;
                 }
               })
             }
+
             if(extensionPass && typePass && (this.props.allowMultipleUploads || newState.droppedFiles.length <=1)){
               newState.droppedFiles.push(file);
               newState.uploading = true;
+              newState.label = getLabel(this.props.label)
               newState.error = {
                 isError: false,
                 errorMessage: ''
@@ -83,6 +116,8 @@ export default class GenericFileUpload extends React.Component {
                 isError: true,
                 errorMessage: (extensionPass && typePass) ? "You cannot add more than one file" : "Incorrect file type"
               };
+
+              this.resetState()
             }
           }else{
             newState.uploading = false;
@@ -90,6 +125,7 @@ export default class GenericFileUpload extends React.Component {
               isError: true,
               errorMessage: "File already uploaded"
             };
+            this.resetState()
           }
         })
       }
@@ -100,7 +136,7 @@ export default class GenericFileUpload extends React.Component {
   }
 
   handleSubmit(state){
-    state.formCssClasses = classNames('box', {'has-advanced-upload': this.useAdvanced, 'is-uploading': state.uploading, 'is-error': state.error.isError})
+    state.formCssClasses = classNames(this.props.css.form,  {'has-advanced-upload': this.useAdvanced, 'is-uploading': state.uploading, 'is-error': state.error.isError})
 
     if(!state.uploading || state.error.isError){
       state.uploading = false;
@@ -113,23 +149,22 @@ export default class GenericFileUpload extends React.Component {
     if(this.props.filesUploadCallback && typeof this.props.filesUploadCallback === 'function'){
       result = this.props.filesUploadCallback(state.droppedFiles);
     }
-    console.log(state, result)
+
     if(!result || (result.error && result.error.isError)){
       this.setState({
         uploading: false,
-        formCssClasses: classNames('box', 'is-error', {'has-advanced-upload': this.useAdvanced})
+        label: result.error.message,
+        formCssClasses: classNames(this.props.css.form,  'is-error', {'has-advanced-upload': this.useAdvanced})
       });
+
+
     }else{
       if(!this.props.allowMultipleUploads || (result.clearState && this.props.allowMultipleUploads)){
         this.setState({
           uploading: false,
-          droppedFiles: [],
-          formCssClasses: classNames('box', 'is-success', {'has-advanced-upload': this.useAdvanced})
-        });
-      }else{
-        this.setState({
-          uploading: false,
-          formCssClasses: classNames('box', 'is-success', {'has-advanced-upload': this.useAdvanced})
+          droppedFiles: (!this.props.allowMultipleUploads || (result.clearState && this.props.allowMultipleUploads)) ? [] : this.state.droppedFiles,
+          label: this.props.successMessage,
+          formCssClasses: classNames(this.props.css.form,  'is-success', {'has-advanced-upload': this.useAdvanced})
         });
       }
     }
@@ -149,16 +184,14 @@ export default class GenericFileUpload extends React.Component {
     let componentUI = (
       <div ref={(wrapper) => {this.wrapper = wrapper;}} className={this.state.cssClasses}>
         {renderFiles.bind(this)()}
-        <form ref={(form) => {this.form = form;}} onDrag={this.handleDrag.bind(this)} onDragEnd={this.handleDrag.bind(this)} onDragEnter={this.handleDrag.bind(this)} onDragExit={this.handleDrag.bind(this)}
-      onDragLeave={this.handleDrag.bind(this)} onDragOver={this.handleDrag.bind(this)} onDragStart={this.handleDrag.bind(this)} onDrop={this.handleDrag.bind(this)} className={this.state.formCssClasses}>
-          <div className="js box__input">
-            <input onChange={this.handleDrag.bind(this)} className="inputfile inputfile-1 box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
-            <label htmlFor="file"><strong>Choose a file</strong><span className="box__dragndrop"> or drag it here</span>.</label>
-            <button className="box__button" type="submit">Upload</button>
+        <form ref={(form) => {this.form = form;}} style={{background: this.props.background}} onDrag={this.handleDrag.bind(this)} onDragEnd={this.handleDrag.bind(this)} onDragEnter={this.handleDrag.bind(this)} onDragExit={this.handleDrag.bind(this)} onDragLeave={this.handleDrag.bind(this)} onDragOver={this.handleDrag.bind(this)} onDragStart={this.handleDrag.bind(this)} onDrop={this.handleDrag.bind(this)} className={this.state.formCssClasses}>
+          <div className={classNames("js", this.props.css.inputBox)}>
+            <input onChange={this.handleDrag.bind(this)} className={classNames("js", this.props.css.input)} type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
+            <label htmlFor="file" className={classNames(this.props.css.inputLabel)}>{this.state.label}</label>
+            <button className={classNames("js", this.props.css.submit)} type="submit">Upload</button>
+            <div className={classNames("js", this.props.css.success)}>Done!</div>
+            <div className={classNames("js", this.props.css.error)}>Error!<br/><span>{this.state.error.errorMessage}</span>.</div>
           </div>
-          <div className="box__uploading">Uploading&hellip;</div>
-          <div className="box__success">Done!</div>
-          <div className="box__error">Error! <span>{this.state.error.errorMessage}</span>.</div>
         </form>
       </div>
     )
@@ -167,3 +200,7 @@ export default class GenericFileUpload extends React.Component {
     return componentUI;
   }
 }
+
+/*
+            <div className={classNames("js", this.props.css.uploading)}>Uploading&hellip;</div>
+*/

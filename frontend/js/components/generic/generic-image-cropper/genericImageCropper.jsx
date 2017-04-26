@@ -184,13 +184,15 @@ export default class GenericImageCropper extends React.Component {
     cropCanvas.height = height;
     cropCanvas.getContext('2d').drawImage(this.image, left, top, width, height, 0, 0, width, height);
     //window.open(cropCanvas.toDataURL("image/png"));
-    if(this.props.cropCallback && typeof this.props.cropCallback === 'function')
+    console.log(this.props.cropCallback);
+    if(this.props.cropCallback && typeof this.props.cropCallback === 'function'){
       this.props.cropCallback(cropCanvas.toDataURL());
+    }
   }
 
   render() {
     let componentUI = (
-      <div className={this.state.cssClasses}>
+      <div className={this.state.cssClasses} ref={(node) => {this.rootNode = node}}>
         <div ref={(overlay) => {this.overlay = overlay}} className="overlay">
           <div className="overlay-inner"></div>
         </div>
