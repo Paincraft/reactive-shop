@@ -1,0 +1,36 @@
+@import 'js/components/admin/css/selectControl.css';
+@import 'js/components/admin/css/tagsInput.css';
+
+.hide{
+  display: none;
+}
+
+.show{
+  display:auto;
+}
+
+.formWrapper{
+  width: 100%;
+  max-width: 300px;
+  margin-left: 25px;
+  margin-top: 25px;
+}
+
+.formField{
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+label{
+  background-color: black;
+  color: white;
+}
+
+input[type="text"], textarea{
+  display: block;
+  width: 100%;
+  margin-top: 0px;
+  padding-top: 0px;
+  border: 1px inset grey;
+  box-sizing: border-box;
+}

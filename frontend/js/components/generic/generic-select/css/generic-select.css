@@ -1,0 +1,117 @@
+.hide{
+  display: none;
+}
+
+.show{
+  display:auto;
+}
+
+.wrapper{
+  max-width: 300px;
+}
+
+.wrapper ul{
+  display:none;
+  list-style: none;
+}
+
+.wrapper ul.active{
+  display: inline-block;
+  position: absolute;
+  list-style: none;
+  margin: 0px;
+  padding:0px;
+}
+
+.hovered.listElement{
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  background-color: #4CAF50;
+}
+
+.inputWrapper{
+  width: 95%;
+  position:relative;
+  outline: none;
+  margin-top: 20px;
+  padding: 5px;
+}
+
+.inputWrapper .inputBox, .wrapper .selectedBox{
+  width: 95%;
+  height:100%;
+  position:relative;
+}
+
+.inputWrapper .singleSelect{
+  position: absolute;
+  width: 95%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background: #4CAF50;
+  z-index: 999;
+}
+
+.wrapper .selectedBox{
+  outline: none;
+  padding-left: 5px;
+}
+
+.inputWrapper input{
+  width: 99%;
+  height: 100%;
+  appearance: none;
+}
+
+.inputWrapper .icon, .oneOfSelectedElements .icon{
+  position: absolute;
+  right: 2px;
+  top:50%;
+  width: 1em;
+  height: 1em;
+  z-index: 999;
+  transform: translateY(-50%);
+}
+
+.listElement{
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.list{
+  background-color: #333;
+  width: 95%;
+  z-index: 999;
+  opacity: 0.95;
+}
+
+.icon {
+	color: #444444;
+	fill: currentColor;
+}
+
+.oneOfSelectedElements{
+  width: 95%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: #4CAF50;
+  margin-bottom: 2px;
+  position: relative;
+}
+
+.selectedElement{
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

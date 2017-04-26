@@ -1,0 +1,148 @@
+/*
+css = {
+  wrapper
+  form
+  inputBox -> js box__input
+  input -> inputfile inputfile-1 box__file
+  inputLabel -> box__dragndrop
+  error -> box__error
+  success -> box__success
+  uploading -> box__uploading
+  submit -> box__button
+}
+
+const fileUploadCss = {
+  wrapper: 'fileUploadWrapper',
+  form: 'fileUploadForm',
+  inputBox: ['fileUploadInputBox'],
+  input: ['fileUploadInput', 'fileUploadInputStyle', 'fileUploadBoxFile'],
+  inputLabel: 'fileUploadDragAndDrop',
+  error: 'fileUploadError',
+  success: 'fileUploadSuccess',
+  uploading: 'fileUploadUploading',
+  submit: 'fileUploadButton'
+}
+*/
+.formWrapper
+{
+  width: 200px;
+  height: 200px;
+}
+
+.fileUploadWrapper
+{
+  text-align: center;
+  margin: 0 auto;
+
+}
+
+.fileUploadForm
+{
+  font-size: 1.25rem; /* 20 */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /*padding: 100px 20px;*/
+}
+
+.fileUploadError,
+.fileUploadUploading,
+.fileUploadSuccess
+{
+  display: none;
+}
+
+.fileUploadError{
+  background-color: red;
+}
+
+.fileUploadSuccess
+{
+  background-color: green;
+}
+
+.fileUploadDragAndDrop
+{
+  display: none;
+}
+
+.fileUploadForm.has-advanced-upload .fileUploadDragAndDrop
+{
+  display: inline;
+}
+
+
+.fileUploadForm.is-uploading .fileUploadInput,
+.fileUploadForm.is-success .fileUploadInput,
+.fileUploadForm.is-error .fileUploadInput
+{
+  visibility: hidden;
+}
+
+.fileUploadForm.is-uploading .fileUploadUploading,
+.fileUploadForm.is-success .fileUploadSuccess,
+.fileUploadForm.is-error .fileUploadError
+{
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+
+  -webkit-transform: translateY( -50% );
+  transform: translateY( -50% );
+}
+
+.js .fileUploadBoxFile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.js .fileUploadInput {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.fileUploadButton
+{
+  font-weight: 700;
+  color: #e5edf1;
+  background-color: #39bfd3;
+  display: none;
+  padding: 8px 16px;
+  margin: 40px auto 0;
+}
+/*-------------------------------------*/
+
+.js .fileUploadBoxFile + label
+{
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+
+  -webkit-transform: translateY( -50% );
+  transform: translateY( -50% );
+}
+
+.fileUploadInput + label {
+  max-width: 80%;
+  font-size: 1.25rem;
+  /* 20px */
+  font-weight: 700;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.625rem 1.25rem;
+  /* 10px 20px */
+}

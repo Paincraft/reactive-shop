@@ -1,0 +1,124 @@
+/*
+const selectCss = {
+  inputWrapper: 'selectInputWrapper',
+  inputBox: 'selectInputBox',
+  listElement: 'selectListElement',
+  list: 'selectList',
+  selectedBox: 'selectSelectedBox',
+  wrapper: 'selectWrapper',
+  singleSelect: 'selectSingleSelect',
+  oneOfSelectedElements: 'selectOneOfSelectedElements',
+  selectedElement: 'selectSelectedElement'
+}
+*/
+
+
+
+.selectWrapper{
+  max-width: 300px;
+}
+
+.selectWrapper ul{
+  display:none;
+  list-style: none;
+}
+
+.selectWrapper ul.active{
+  display: inline-block;
+  position: absolute;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.hovered.selectListElement{
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  background-color: #4CAF50;
+}
+
+.selectInputWrapper{
+  width: 100%;
+  position:relative;
+  outline: none;
+  /*padding: 5px;*/
+}
+
+.selectInputWrapper .selectInputBox, .selectWrapper .selectSelectedBox{
+  width: 100%;
+  height:100%;
+  position:relative;
+}
+
+.selectInputWrapper .selectSingleSelect{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  background: #4CAF50;
+  z-index: 999;
+}
+
+.selectWrapper .selectSelectedBox{
+  outline: none;
+  padding-top: 5px;
+}
+
+.selectInputWrapper input{
+  width: 99%;
+  height: 100%;
+  appearance: none;
+}
+
+.selectInputWrapper .icon, .selectOneOfSelectedElements .icon{
+  position: absolute;
+  right: 2px;
+  top:50%;
+  width: 1em;
+  height: 1em;
+  z-index: 999;
+  transform: translateY(-50%);
+}
+
+.selectListElement{
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.selectList{
+  background-color: #333;
+  width: 95%;
+  z-index: 999;
+  opacity: 0.95;
+}
+
+.icon {
+	color: #444444;
+	fill: currentColor;
+}
+
+.selectOneOfSelectedElements{
+  width: 95%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: #4CAF50;
+  margin-bottom: 2px;
+  position: relative;
+}
+
+.selectSelectedElement{
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
