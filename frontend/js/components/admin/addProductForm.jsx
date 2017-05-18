@@ -63,7 +63,7 @@ export default class AddProductForm extends React.Component {
     //this.fileUploadLabel;
     this.selectedFile = '';
     this.instance = Axios.create({
-      baseURL: 'http://localhost:3000/product/',
+      baseURL: 'http://localhost:3000/api/product/',
       timeout: 1000
     });
   }
@@ -111,17 +111,18 @@ export default class AddProductForm extends React.Component {
   }
 
   /*Temporary until redux is implemented*/
-  setName(name){
+  setName(){
+    //console.log('setting name', name)
     let product = this.state.product;
-    product.name = name;
+    product.name = this.nameInput.value;
     this.setState({
       product: product
     });
   }
 
-  setDescription(description){
+  setDescription(){
     let product = this.state.product;
-    product.description = description;
+    product.description = this.descriptionInput.value;
     this.setState({
       product: product
     });
@@ -136,6 +137,7 @@ export default class AddProductForm extends React.Component {
   }
 
   setTags(tags){
+    console.log('tags change', tags);
     let product = this.state.product;
     product.tags = tags;
     this.setState({
@@ -144,7 +146,7 @@ export default class AddProductForm extends React.Component {
   }
 
   saveProduct(){
-    this.instance.post('/saveproduct', this.state.product,{
+    this.instance.post('/saveproduct', this.state.product, {
       headers: {
         'Content-Type':'application/json'
       }
@@ -176,11 +178,11 @@ export default class AddProductForm extends React.Component {
         </div>
         <div className={classNames(this.props.css.formField)}>
           <label className={classNames(this.props.css.label)} form={this.props.id} htmlFor={'productName'}>name</label>
-          <input onChange={this.setName.bind(this)} id={'productName'} type={"text"} />
+          <input ref={(nameInput) => this.nameInput = nameInput} onChange={this.setName.bind(this)} id={'productName'} type={"text"} />
         </div>
         <div className={classNames(this.props.css.formField)}>
           <label className={classNames(this.props.css.label)} form={this.props.id} htmlFor={'categories'}>description</label>
-          <textarea onChange={this.setDescription.bind(this)} id={'productDescription'}></textarea>
+          <textarea ref={(descriptionInput) => this.descriptionInput = descriptionInput} onChange={this.setDescription.bind(this)} id={'productDescription'}></textarea>
         </div>
         <div className={classNames(this.props.css.formField)}>
           <label className={classNames(this.props.css.label)} form={this.props.id} htmlFor={'categories'}>categories</label>

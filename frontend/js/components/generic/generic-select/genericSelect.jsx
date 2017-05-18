@@ -21,6 +21,12 @@ export default class GenericSelect extends React.Component {
     };
   }
 
+  stripValues(selectedElements){
+     return selectedElements.map((selectedElement) => {
+      return {name: selectedElement.name, value: selectedElement.value};
+    });
+  }
+
   handleOnKeyUp(event){
     event.preventDefault();
     event.stopPropagation();
@@ -65,7 +71,7 @@ export default class GenericSelect extends React.Component {
         listIsActive: false
       })
       if (this.props.onChange && typeof this.props.onChange === 'function')
-        this.props.onChange(selectedElements);
+        this.props.onChange(this.stripValues(selectedElements));
     }
   }
 
@@ -95,7 +101,7 @@ export default class GenericSelect extends React.Component {
       if((this.props.multipleSelect === true && (!selectedElements.includes(selected) || (this.props.allowSameElements === true)))|| (!this.props.multipleSelect && selectedElements.length < 1)){
         selectedElements.push(selected);
         if (this.props.onChange && typeof this.props.onChange === 'function')
-          this.props.onChange(selectedElements);
+          this.props.onChange(this.stripValues(selectedElements));
       }
       this.setState({
         options: options,

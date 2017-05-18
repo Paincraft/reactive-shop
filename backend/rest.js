@@ -1,70 +1,70 @@
 var Express = require('express')
 var BodyParser = require('body-parser');
-var Fs = require('fs');
-var Gridfs = require('gridfs-stream');
-var Base64 = require('base64-stream');
-//var dbApi = require('./db/mongo_test.js');
-var ReadableStream = require('stream').Readable;
-var Product = require('./db/models/product.js');
+var DBapi = require('./db/db_utils.js');
+var ProductApi = require('./api/products.js');
 var App = Express();
-var Router = Express.Router();
+var Router = Express.Router(); 
 
-Mongoose.connect('mongodb://localhost/test');
-var dbConn = mongoose.connection;
+var opts = {};
+opts.isDB = false;
 
-var allowCrossDomain = function(req, res, next) {
+//Mongoose.connect('mongodb://localhost/test');
+var setupPromise = new Promise((resolve,reject) => {
+  DBapi.open('localhost', 27017, 'test').then((connection) => {
+    opts.dbConn = connection; 
+    opts.isDB = true;  
+    console.log('db connection opened');
+    var productApi = new ProductApi(opts);
+    resolve(productApi);
+  }).catch((error) => {
+    reject(error);  
+  }) 
+})
+
+
+
+/*var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+
     next();
-}
+}*/
 
-App.use(BodyParser.json({limit: '5mb'}));
-App.use(BodyParser.urlencoded({limit: '5mb'}));
-App.use(allowCrossDomain);
-App.use('/api', Router);
+setupPromise.then((productApi) => {
+  App.use(BodyParser.json({limit: '5mb'}));
+  App.use(BodyParser.urlencoded({limit: '5mb'}));
+  //App.use(allowCrossDomain);  
+  App.use('/api', Router);
 
-Router.post('/product/saveproduct', function (req, res) {
-  var fileExtension = req.body.fileExtension;
+  Router.options("/*", function(req, res, next){
+    res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.send(200);
+  });
 
-  var product = new Product();
-  product.name = req.body.name;
-  product.description = req.body.description;
-  product.category = req.body.category;
-  product.thumbnailId = `${product.name}-${new Date().getTime()}.${fileExtension}`;
+  Router.post('/product/saveproduct', productApi.saveProduct.bind(productApi));
 
-  Grid.mongo = Mongoose.mongo;
-
-  conn.once('open', function () {
-    console.log('open');
-    var gfs = Grid(dbConn.db);
-
-    // streaming to gridfs
-    //filename to store in mongodb
-    var writestream = gfs.createWriteStream({
-        filename: product.thumbnailId
-    });
-
-    var s = new ReadableStream;
-    s.push('your text here');
-    s.push(null);
-
-    s.pipe(Base64.decode()).pipe(writestream);
-
-    writestream.on('close', function (file) {
-        // do something with `file`
-        console.log(file.filename + 'Written To DB');
-        product.save(function(err){
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('product saved');
-          }
-        })
-    });
-
+  var server = App.listen(3000, function () {
+    console.log('Example app listening on port 3000!')
+  })  
+}).catch((error) => {
+  console.log(error);
 })
 
-App.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
-})
+//close cleaup
+process.on('SIGTERM', function () {
+
+   server.close(function () {
+     console.log( "Closed out remaining connections.");
+     // Close db connections, etc.
+   });
+
+   setTimeout( function () {
+     console.error("Could not close connections in time, forcefully shutting down");
+     process.exit(1); 
+   }, 30*1000);
+
+});

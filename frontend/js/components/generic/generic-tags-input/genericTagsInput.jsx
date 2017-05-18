@@ -37,9 +37,15 @@ export default class GenericTagsInput extends React.Component {
     };
   }
 
+  stripValues(tagObjList){
+     return tagObjList.map((tagObj) => {
+      return tagObj.tag;
+    });
+  }
+
   handleOnKeyDown(event){
     if(this.props.output) return;
-    console.log(this.wrapper);
+    //console.log(this.wrapper);
     let input = this.wrapper.getElementsByTagName('input')[0] || null;
     let key = event.keyCode || event.which;
     let tags = input.value.split(SEPARATOR);
@@ -85,8 +91,10 @@ export default class GenericTagsInput extends React.Component {
       if(update){
         this.setState({tags: newTags});
         input.value = '';
-        if (this.props.onChange && typeof this.props.onChange === 'function')
-          this.props.onChange(newTags);
+        if (this.props.onChange && typeof this.props.onChange === 'function'){
+          //console.log(this.stripTags(newTags));
+          this.props.onChange(this.stripValues(newTags));
+        }
       }
     }
   }
@@ -108,7 +116,7 @@ export default class GenericTagsInput extends React.Component {
     newTags.splice(tagIndex, 1);
     this.setState({tags: newTags});
     if (this.props.onChange && typeof this.props.onChange === 'function')
-      this.props.onChange(newTags);
+      this.props.onChange(this.stripValues(newTags));
   }
 
   deleteSelectedTags(wrapper){
